@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
 import { connect } from 'react-redux'
-import { authenticateUser } from '../../../actions/user.action'
+import { authenticateUser } from '../actions/user.action'
 
 class Login extends Component {
     constructor(props){

@@ -12,3 +12,9 @@ export function registerUser (data) {
     }
   }
   
+  export function authenticateUser (data) {
+    return {
+      type: types.REGISTER_USER,
+      payload: axios.post(`${apiHost}/authenticate`, data)
+    }
+  }
