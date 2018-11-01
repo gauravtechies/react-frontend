@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Async, { Props as AsyncProps } from 'react-promise'
 import { Link } from 'react-router-dom'
 import { registerUser } from '../actions/user.action'
+import { connect } from 'react-redux'
 
-class RegistrationForm extends Component {
+class RegistrationForm extends React.Component {
     
 initState = {
     firstName: null,
@@ -15,10 +18,11 @@ initState = {
 constructor(props){
     super(props);
     this.state =this.initState;
+    this.onSubmit = this.onSubmit.bind(this); 
+ }
 
-}
-onSubmit = (e) => {
-    e.preventDefault()
+ onSubmit(e){
+    e.preventDefault();
     const data = {
         "user":{
             first_name: this.state.firstName,
@@ -27,20 +31,32 @@ onSubmit = (e) => {
             password: this.state.password
         }
     }
-    registerUser(data)
+    this.props.registerUser(data)
     .then(function (response) {
-          console.log(response)
-     }).catch(function (error) {
-        console.log(error)
-     }); 
-    
-
+       toast.success("User registered successfully!", {
+            position: toast.POSITION.TOP_CENTER
+        });
+    })
+    .catch(function (error) {
+        // if (error.response && error.response.data && Array.isArray(error.response.data)) {
+        //     let errorMsg = error.response.data.map(function(msg, index){
+        //         if(msg.field!="username"){
+        //             return <li key={index}>{msg.message}</li>;
+        //         }
+        //     });
+        //     currentComponent.setState({errorMsgs:<ul className="alert alert-danger">{errorMsg}</ul>})
+        // }else{
+        //     toast.error("Something went wrong.", {
+        //         position: toast.POSITION.TOP_CENTER
+        //     });
+        // }
+    });
+  
   }
 onChange = (e) => {
     const state = this.state
     state[e.target.name] = e.target.value
     this.setState(state)
-    console.log(state)
     }
   render() {
     return (
@@ -74,4 +90,8 @@ onChange = (e) => {
     );
   }
 }
-export default RegistrationForm;
+
+const mapStateToProps = (state) =>({
+    user: state.users
+})
+export default connect(mapStateToProps, { registerUser })(RegistrationForm);

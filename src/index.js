@@ -1,13 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { ToastContainer } from 'react-toastify';
 import Header from './components/Header.component'
-import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import reducers from './reducers';
+import { Provider } from 'react-redux'
+import { createStore, applyMiddleware, compose } from 'redux'
+import promiseMiddleware from 'redux-promise-middleware'
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 import RegistrationForm from './User/RegistrationForm';
+import Login from './User/Login';
+
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+const store = createStore(reducers, composeEnhancers(applyMiddleware(promiseMiddleware())))
 
 class BaseLayout extends React.Component{
     constructor(props){
@@ -17,17 +26,22 @@ class BaseLayout extends React.Component{
     
     render() {
         return(
+            <Provider store={store}>
             <Router>
                 <div>
                   <Header />
                      <div className="container-fluid">
                         <Switch>
+                            <Route path="/" exact component={App} />
                             <Route path="/register" component={RegistrationForm} />
+                            <Route path="/login" component={Login} />
+
                         </Switch>
                     </div>
                     <ToastContainer autoClose={5000} />
                 </div>
             </Router>
+            </Provider>
 
   )}
 }
