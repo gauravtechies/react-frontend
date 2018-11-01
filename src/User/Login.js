@@ -11,7 +11,7 @@ class Login extends Component {
        
     }
      submitHandler = (e) =>{
-         e.preventDefault();
+        e.preventDefault();
         var current_instance=this;
         const data = {email: this.state.email, password: this.state.password}
         this.props.authenticateUser(data)
